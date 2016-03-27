@@ -67,7 +67,17 @@ public class ServiceBeacon implements ProxyableService, BeaconConsumer {
         beaconManager.setForegroundBetweenScanPeriod(TimeUnit.SECONDS.toMillis(30));
         beaconManager.setBackgroundBetweenScanPeriod(TimeUnit.SECONDS.toMillis(120));
         beaconManager.setBackgroundScanPeriod(TimeUnit.SECONDS.toMillis(30));
-        beaconManager.getBeaconParsers().add(new BeaconParser().setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24"));        // TODO: make configurable
+        // Eddystone Beacons
+        // Detect the main identifier (UID) frame:
+        beaconManager.getBeaconParsers().add(new BeaconParser().setBeaconLayout("s:0-1=feaa,m:2-2=00,p:3-3:-41,i:4-13,i:14-19"));
+        // Detect the telemetry (TLM) frame:
+        beaconManager.getBeaconParsers().add(new BeaconParser().setBeaconLayout("x,s:0-1=feaa,m:2-2=20,d:3-3,d:4-5,d:6-7,d:8-11,d:12-15"));
+        // Detect the URL frame:
+        beaconManager.getBeaconParsers().add(new BeaconParser().setBeaconLayout("s:0-1=feaa,m:2-2=10,p:3-3:-41,i:4-20v"));
+        // AltBeacon
+        beaconManager.getBeaconParsers().add(new BeaconParser().setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24"));
+        // iBeacon
+        beaconManager.getBeaconParsers().add(new BeaconParser().setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24"));
         beaconManager.bind(this);
 
     }
